@@ -1,7 +1,8 @@
 // HomeScreen.js
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, Text, Button, ImageBackground, ScrollView } from 'react-native';
 import { Card, ListItem, Icon } from 'react-native-elements';
+import {fetchData, putData} from '../awsfunctions'
 
 // import backgroundImage from '../assets/background.jpg';
 // import fishImage from '../assets/fish.png';
@@ -29,6 +30,19 @@ const features = [
   },
 ];
 
+const addDataToDynamoDB = () => {
+  const timestamp = Date.now();
+  const userData = {
+    timestamp :  timestamp,
+    message_id : "ph",
+    value : "12"
+  }
+  
+  // putData('IoT_Dynamo_DB' , userData)
+  fetchData('IoT_Dynamo_DB')
+}
+
+
 function HomeScreen({ navigation }) {
   return (
     <ImageBackground
@@ -48,12 +62,16 @@ function HomeScreen({ navigation }) {
         <Text style={{ fontSize: 18, marginBottom: 20, textAlign: 'center' }}>
           Aqua Culture is your all-in-one solution for monitoring and caring for your aquarium.
         </Text>
-        <Button
+        {/* <Button
           title="View Fish Details"
           onPress={() => navigation.navigate('FishDetail')}
           buttonStyle={{ backgroundColor: '#3498db' }}
+        /> */}
+        <Button
+          title="Fetch Details"
+          onPress={() => addDataToDynamoDB()}
+          buttonStyle={{ backgroundColor: '#3498db' }}
         />
-        
           <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>Key Features:</Text>
           {features.map((feature, index) => (
             <Card key={index} containerStyle={{ marginBottom: 15 }}>
