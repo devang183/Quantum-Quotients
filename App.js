@@ -27,6 +27,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from './screens/HomeScreen';
 import FishDetailScreen from './screens/FishDetailScreen';
+import DashboardScreen from './screens/Dashboard';
+import DynamoDBScreen from './screens/DynamoDBScreen';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +38,9 @@ function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="FishDetail" component={FishDetailScreen} />
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        <Stack.Screen name="Live Data" component={DynamoDBScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -2,7 +2,60 @@
 import React, { useState } from 'react';
 import { View, Text, Button, ImageBackground } from 'react-native';
 import { Input, Slider, Icon } from 'react-native-elements';
+import {fetchData, putData} from '../awsfunctions'
 
+const addDataToDynamoDB = (thisdata) => {
+    const timestamp = Date.now();
+    
+    // Generate a random message ID
+    const messageId = Math.random().toString(36).substr(2, 5); // Adjust the length as needed
+
+    // Convert the JSON data to a string
+    const jsonDataString = JSON.stringify(thisdata);
+
+    const userData = {
+        timestamp: timestamp,
+        message_id: messageId,
+        value: jsonDataString,
+    };
+
+    putData('IoT_Dynamo_DB', userData);
+};
+
+const generateRandomData = () => {
+    const randomData = [];
+
+    for (let i = 0; i < 20; i++) {
+        // Generate a random message ID
+        // const messageId = Math.random().toString(36).substr(2, 5);
+
+        // Generate a timestamp with a datetime difference of every 6 hours
+        const timestamp = Date.now() - i * 6 * 60 * 60 * 1000;
+
+        // Generate random values for other fields
+        const temperature = Math.random() * 100;
+        const phLevel = Math.random() * 14;
+        const foodLevel = Math.random() * 100;
+        const waterLevel = Math.random() * 100;
+
+        // Create the JSON data
+        const jsonData = {
+            // timestamp: timestamp,
+            date: new Date(timestamp).toISOString(), // Add the date field
+            // message_id: messageId,
+            temperature: temperature,
+            ph: phLevel,
+            "food level": foodLevel,
+            "water level": waterLevel,
+        };
+
+        // Add the JSON data to the array
+        randomData.push(jsonData);
+    }
+
+    return randomData;
+};
+  
 function FishDetailScreen() {
   const [temperature, setTemperature] = useState(25);
   const [phLevel, setPhLevel] = useState(7);
@@ -11,7 +64,12 @@ function FishDetailScreen() {
 
   const handleFeeding = () => {
     // Implement feeding logic here
-    setFoodLevel(foodLevel + 10);
+    // setFoodLevel(foodLevel + 10);
+    console.log("fishhhhh>>>>>>>>>.", temperature,phLevel, foodLevel, waterLevel)
+    const randomData = generateRandomData();
+    console.log("data....????/", randomData)
+    // randomData.forEach(data => addDataToDynamoDB(data));
+    // addDataToDynamoDB({"temperature": temperature,"ph":phLevel,"food level": foodLevel,"water level": waterLevel})
   };
 
   return (
@@ -58,7 +116,7 @@ function FishDetailScreen() {
           inputStyle={{ color: '#333' }}
         />
         <Slider
-          value={waterLevel}
+          value={foodLevel}
           onValueChange={(value) => setFoodLevel(value)}
           minimumValue={0}
           maximumValue={100}
